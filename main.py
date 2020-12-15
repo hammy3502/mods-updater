@@ -1,5 +1,6 @@
 import requests
 import os
+import sys
 
 def full_path(path):
     """Expands a File Path.
@@ -16,12 +17,15 @@ def full_path(path):
 
 def main():
     print("Preparing to download...")
-    for f in os.listdir(full_path("%appdata%\\.minecraft\\")):
-        working_dir = full_path("%appdata%\\.minecraft\\{}".format(f))
-        if f.lower() == "bbnawrjv1" and os.path.isdir(working_dir):
+    i = 9999
+    while i > 0:
+        working_dir = full_path("%appdata%\\.minecraft\\BBNAWRJv" + str(i))
+        if os.path.isdir(working_dir):
             break
-    os.chdir(working_dir)
-    os.chdir("mods")
+        else:
+            i -= 1
+    print("Using BBNAWRJv" + str(i))
+    os.chdir(os.path.join(working_dir, "mods"))
     print("Deleting old SurvivalExtras...")
     for f in os.listdir():
         if "SurvivalExtras".lower() in f.lower():
@@ -29,9 +33,14 @@ def main():
             break
     print("Downloading new SurvivalExtras...")
     url = "http://blf02.net:8000/SurvivalExtras.jar"
-    r = requests.get(url, allow_redirects=True)
+    try:
+        r = requests.get(url, allow_redirects=True, timeout=30)
+    except Exception:
+        print("Failed to download the updated SurvivalExtras!!!!!")
+        sys.exit(1)
     open("SurvivalExtras.jar", 'wb').write(r.content)
     print("Success!")
+    sys.exit(0)
 
 
 if __name__ == '__main__':
