@@ -8,7 +8,7 @@ import sys
 
 
 
-host = "http://blf02.net:8000"
+host = "http://localhost:8000"
 
 
 
@@ -62,6 +62,8 @@ def main():
     print("Deleting files...")
     if to_del[0].lower() == "all":
         to_del = os.listdir()
+    elif to_del[0].lower() == "none":
+        to_del = []
     for f in os.listdir():
         if f in to_del:
             try:

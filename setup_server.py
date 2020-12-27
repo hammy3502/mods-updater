@@ -10,7 +10,14 @@ os.chdir("to_delete_mods")
 to_del = os.listdir()
 to_del_str = "\n".join(to_del)
 if to_del_str.strip() == "":
-    to_del_str = "all"
+    x = input("Delete all mods or no mods? [a/n]")
+    if x == "a":
+        to_del_str = "all"
+    elif x == "n":
+        to_del_str = "none"
+    else:
+        print("That isn't either or!")
+        exit(1)
 
 print("Creating mods to send list...")
 os.chdir(root)
