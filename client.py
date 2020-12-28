@@ -33,7 +33,7 @@ def download(down_url):
     try:
         r = requests.get(down_url, allow_redirects=True, timeout=30)
         if r.status_code != 200:
-            print("Error " + r.status_code + ".")
+            print("\nError " + r.status_code + ".")
             raise Exception
         return r.content
     except Exception:
@@ -80,7 +80,8 @@ def main():
         content = download(url.format("new_mods/" + n))
         print("Writing     {}...".format(n), end="\r")
         open(n, 'wb').write(content)
-    print("Successfully downloaded all mods!")
+        print(" "*70, end="\r")
+    print("\nSuccessfully downloaded all mods!")
     input("Press ENTER to exit...")
     sys.exit(0)
 
