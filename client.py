@@ -16,6 +16,34 @@ host = "http://blf02.net:8000"
 
 url = host + "/{}"
 
+
+def status(msg):
+    if len(msg) > 120:
+        pound_size = 120
+    else:
+        pound_size = len(msg)
+    print("#"*pound_size)
+    print(msg)
+    print("#"*pound_size)
+
+
+def progress(val, msg="    "):
+    """Update Progress of Operation.
+    Updates a progress bar (if we have a GUI) as tarstall processes run
+    Args:
+        val (int/float): Value to update the progress bar to.
+        msg (str): Message to display on right side of progress bar. Defaults to "    ".
+    Stole this from tarstall (my own program) lol
+
+    """
+    columns = 120
+    start_chars = "Progress ({}%): ".format(str(int(val)))
+    end_chars = msg
+    end_buffer = 80
+    full_squares = int(val * 0.01 * (columns - len(start_chars) - end_buffer))
+    empty_squares = columns - len(start_chars) - end_buffer - full_squares
+    print(start_chars + "■"*full_squares + "□"*empty_squares + end_chars, end="\r")
+
 def full_path(path):
     """Expands a File Path.
 
@@ -59,7 +87,7 @@ def main():
     to_del = to_del.split("\n")
     for i in range(len(to_del)):
         to_del[i] = to_del[i].strip()
-    print("Deleting files...")
+    print("Deleting old mods...")
     if to_del[0].lower() == "all":
         to_del = os.listdir()
     elif to_del[0].lower() == "none":
@@ -70,23 +98,29 @@ def main():
                 os.remove(f)
             except (IsADirectoryError, FileNotFoundError):
                 continue
+    if to_del == []:
+        print("No mods needed to be deleted!")
+    else:
+        print("Old mods deleted!")
     print("Getting list of mods to download")
     to_get = download(url.format("new_mods.txt")).decode("utf-8")
     to_get = to_get.split("\n")
     for i in range(len(to_get)):
         to_get[i] = to_get[i].strip()
+    print("\n\n\nDownloading Mods...")
     for n in to_get:
-        print("Downloading {}...".format(n), end="\r")
+        progress((to_get.index(n) / (len(to_get) - 1))*100, "    Downloading {}...".format(n))
         content = download(url.format("new_mods/" + n))
-        print("Writing     {}...".format(n), end="\r")
+        progress((to_get.index(n) / (len(to_get) - 1))*100, "    Writing     {}...".format(n))
         open(n, 'wb').write(content)
-        print(" "*70, end="\r")
+        print(" "*119, end="\r")
     print("\nSuccessfully downloaded all mods!")
-    input("Press ENTER to exit...")
-    sys.exit(0)
 
 
 if __name__ == '__main__':
+    print("Welcome to the Mods Updater/Downloader/Whatever-er!")
+    print("Made by hammy3502")
+    status("Please keep this window open and do not use other applications while this is running!")
     input("Press ENTER to continue...")
     main()
     input("Press ENTER to exit...")
