@@ -36,7 +36,10 @@ def progress(val, msg="    "):
     Stole this from tarstall (my own program) lol
 
     """
-    columns = 120
+    try:
+        columns = os.get_terminal_size()[0]
+    except Exception:
+        columns = 140
     start_chars = "Progress ({}%): ".format(str(int(val)))
     end_chars = msg
     end_buffer = 80
@@ -73,6 +76,7 @@ def download(down_url):
 
 def main():
     print("Initiating...")
+    os.system("mode con: cols=140 lines={}".format(os.get_terminal_size()[1]))  # Set terminal size to 140, while keeping original height
     i = 9999
     while i > 0:
         working_dir = full_path("%appdata%\\.minecraft\\BBNAWRJv" + str(i))
@@ -113,14 +117,15 @@ def main():
         content = download(url.format("new_mods/" + n))
         progress((to_get.index(n) / (len(to_get) - 1))*100, "    Writing     {}...".format(n))
         open(n, 'wb').write(content)
-        print(" "*119, end="\r")
+        print(" "*139, end="\r")
     print("\nSuccessfully downloaded all mods!")
 
 
 if __name__ == '__main__':
     print("Welcome to the Mods Updater/Downloader/Whatever-er!")
     print("Made by hammy3502")
-    status("Please keep this window open and do not use other applications while this is running!")
+    status("Please keep this window open and do not use other applications while this is running! " 
+    + "If you do, and the installation freezes, press ENTER on this window to continue installation!")
     input("Press ENTER to continue...")
     main()
     input("Press ENTER to exit...")
