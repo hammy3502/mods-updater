@@ -113,9 +113,13 @@ def main():
         to_get[i] = to_get[i].strip()
     print("\n\n\nDownloading Mods...")
     for n in to_get:
-        progress((to_get.index(n) / (len(to_get) - 1))*100, "    Downloading {}...".format(n))
+        try:
+            this_progress = (to_get.index(n) / (len(to_get) - 1))*100
+        except Exception:
+            this_progress = 0
+        progress(this_progress, "    Downloading {}...".format(n))
         content = download(url.format("new_mods/" + n))
-        progress((to_get.index(n) / (len(to_get) - 1))*100, "    Writing     {}...".format(n))
+        progress(this_progress, "    Writing     {}...".format(n))
         open(n, 'wb').write(content)
         print(" "*139, end="\r")
     print("\nSuccessfully downloaded all mods!")
