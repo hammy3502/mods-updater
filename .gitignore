@@ -1,4 +1,6 @@
 new_mods/
 to_delete_mods/
+venv/
+.idea/
 new_mods.txt
 to_delete_mods.txt

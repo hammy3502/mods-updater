@@ -9,6 +9,7 @@ import sys
 
 
 host = "http://blf02.net:8000"
+modpack_folder = "BBKAWRJv"
 
 
 
@@ -47,6 +48,7 @@ def progress(val, msg="    "):
     empty_squares = columns - len(start_chars) - end_buffer - full_squares
     print(start_chars + "■"*full_squares + "□"*empty_squares + end_chars, end="\r")
 
+
 def full_path(path):
     """Expands a File Path.
 
@@ -64,7 +66,7 @@ def download(down_url):
     try:
         r = requests.get(down_url, allow_redirects=True, timeout=30)
         if r.status_code != 200:
-            print("\nError " + r.status_code + ".")
+            print("\nError " + str(r.status_code) + ".")
             raise Exception
         return r.content
     except Exception:
@@ -76,15 +78,17 @@ def download(down_url):
 
 def main():
     print("Initiating...")
-    os.system("mode con: cols=140 lines={}".format(os.get_terminal_size()[1]))  # Set terminal size to 140, while keeping original height
+    # Set terminal size to 140, while keeping original height
+    os.system("mode con: cols=140 lines={}".format(os.get_terminal_size()[1]))
     i = 9999
+    working_dir = ""
     while i > 0:
-        working_dir = full_path("%appdata%\\.minecraft\\BBNAWRJv" + str(i))
+        working_dir = full_path("%appdata%\\.minecraft\\{}".format(modpack_folder) + str(i))
         if os.path.isdir(working_dir):
             break
         else:
             i -= 1
-    print("Using BBNAWRJv" + str(i))
+    print("Using {}".format(modpack_folder) + str(i))
     os.chdir(os.path.join(working_dir, "mods"))
     print("Getting list of mods to delete...")
     to_del = download(url.format("to_delete_mods.txt")).decode("utf-8")
@@ -102,7 +106,7 @@ def main():
                 os.remove(f)
             except (IsADirectoryError, FileNotFoundError):
                 continue
-    if to_del == []:
+    if not to_del:
         print("No mods needed to be deleted!")
     else:
         print("Old mods deleted!")
