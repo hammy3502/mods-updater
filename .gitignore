@@ -4,3 +4,5 @@ venv/
 .idea/
 new_mods.txt
 to_delete_mods.txt
+version.txt
+forge.jar
