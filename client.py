@@ -138,7 +138,7 @@ def main():
     print("Checking for new Forge version...")
     forge_content = download(url.format("forge.jar"), True)
     if forge_content is not None:
-        print("Running Forge installer. Please click install!")
+        print("Running Forge installer. Please click install client, then click ok!")
         os.chdir(os.path.expandvars("%temp%"))
         with open("forge.jar", 'wb') as f:
             f.write(forge_content)
